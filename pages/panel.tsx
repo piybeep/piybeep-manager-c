@@ -4,6 +4,7 @@ export default function Panel() {
 			<h1>Piybeep Manager</h1>
 			<p>Панель управления проектами</p>
 			<samp>[В разарботке]</samp>
+			
 		</section>
 	);
 }
