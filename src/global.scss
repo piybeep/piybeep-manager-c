@@ -1,0 +1,26 @@
+* {
+	box-sizing: border-box;
+}
+body,
+#__next {
+	margin: 0;
+	background: #100f13;
+	color: #dcdcdc;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+header,
+footer {
+	flex: 0 0 auto;
+}
+
+main {
+	flex: 1 0 auto;
+
+	.popup__show {
+		opacity: 1;
+		// z-index: 10 !important;
+		visibility: visible;
+	}
+}

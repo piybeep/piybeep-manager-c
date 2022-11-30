@@ -1,0 +1,48 @@
+.sort_popup {
+	width: fit-content;
+	background: #232328;
+	border-radius: 10px 4px 10px 10px;
+	padding: 14px 12px;
+	display: flex;
+	flex-direction: column;
+	row-gap: 14px;
+	box-shadow: 0 0 10px 4px #100f13;
+
+	transition: visibility 0.5s;
+	transition: opacity 0.5s;
+	opacity: 0;
+	visibility: hidden;
+
+	h4 {
+		margin: 0;
+
+		.button:hover {
+			background: #323237;
+		}
+	}
+	ul {
+		margin: 0;
+		padding: 0;
+	}
+	.list {
+		list-style: none;
+
+		li {
+			border-radius: 4px;
+			padding: 5px 12px 5px 5px;
+			cursor: pointer;
+
+			&:hover {
+				background: #323237;
+			}
+
+			span {
+				color: transparent;
+
+				&.active {
+					color: inherit;
+				}
+			}
+		}
+	}
+}

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import s from './Button.module.scss'
+import s from "./Button.module.scss";
 
 export default function Button({ icon, text, ...props }: Record<any, any>) {
 	return (

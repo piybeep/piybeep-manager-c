@@ -22,7 +22,7 @@ export default function Index() {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<Header {...headerOptions} />
-			<main>
+			<main className="home_page">
 				<Table
 					titles={[
 						{ text: "Название проекта", icon: Alphabet },

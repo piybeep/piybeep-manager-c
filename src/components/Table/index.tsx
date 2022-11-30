@@ -1,5 +1,7 @@
 import Button from "../Button";
 import s from "./Table.module.scss";
+import SortPopup from "../SortPopup";
+import React from "react";
 
 type TitleType = {
 	text: string;
@@ -21,8 +23,60 @@ export interface TableProps {
 }
 
 export default function Table(props: TableProps) {
+	const [showPopup, setShowPopup] = React.useState(false);
+	const COLORS = {
+		"В планах": "#8E8E8E",
+		"В очереди": "#FDBB8B",
+		"В разработке (приоритет)": "#FF8D8D",
+		"В разработке (дизайн)": "#FF8DED",
+		"В разработке": "#BF8DFF",
+		"В заморозке": "#7EB2FF",
+		"Поддержка": "#FFE68B",
+		"Завершено": "#93FF82",
+	};
+
+	const close = () => {
+		console.log("close", showPopup);
+
+		setShowPopup((v) => !v);
+	};
 	return (
 		<table className={s.table}>
+			<SortPopup
+				className={s.sort_popup}
+				show={showPopup}
+				close={close}
+				list={[
+					{ text: "В планах", color: COLORS["В планах"] },
+					{ text: "В очереди", color: COLORS["В очереди"], active: true },
+					{
+						text: "В разработке (приоритет)",
+						color: COLORS["В разработке (приоритет)"],
+					},
+					{
+						text: "В разработке (дизайн)",
+						color: COLORS["В разработке (дизайн)"],
+						active: true,
+					},
+					{
+						text: "В разработке",
+						color: COLORS["В разработке"],
+					},
+					{
+						text: "В заморозке",
+						color: COLORS["В заморозке"],
+					},
+					{
+						text: "Поддержка",
+						color: COLORS["Поддержка"],
+					},
+					{
+						text: "Завершено",
+						color: COLORS["Завершено"],
+						active: true,
+					},
+				]}
+			/>
 			<thead>
 				<tr>
 					{props.titles.map((t) => (
@@ -30,7 +84,11 @@ export default function Table(props: TableProps) {
 							<span
 								className={t.sort ? (t.sort === "down" ? s.down : s.up) : ""}
 							>
-								<Button icon={t.icon} text={t.text} />
+								{t.text == "Статус" ? (
+									<Button icon={t.icon} text={t.text} onClick={close} />
+								) : (
+									<Button icon={t.icon} text={t.text} />
+								)}
 							</span>
 						</th>
 					))}
@@ -54,12 +112,14 @@ export default function Table(props: TableProps) {
 									};
 									return (
 										// @ts-ignore
-										<td style={{ color: colors[cell.text] }}>{cell.text}</td>
+										<td key={cell.text} style={{ color: colors[cell.text] }}>
+											{cell.text}
+										</td>
 									);
 								}
 								case "link": {
 									return (
-										<td title={cell.text}>
+										<td key={cell.text} title={cell.text}>
 											<a href={cell.text} target="_blank">
 												{cell.text
 													.replace("https://", "")
@@ -70,13 +130,16 @@ export default function Table(props: TableProps) {
 								}
 								case "date": {
 									return (
-										<td title={new Date(cell.text).toLocaleString()}>
+										<td
+											key={cell.text}
+											title={new Date(cell.text).toLocaleString()}
+										>
 											{new Date(cell.text).toLocaleDateString()}
 										</td>
 									);
 								}
 								default: {
-									return <td>{cell.text}</td>;
+									return <td key={cell.text}>{cell.text}</td>;
 								}
 							}
 						})}
@@ -86,4 +149,5 @@ export default function Table(props: TableProps) {
 		</table>
 	);
 }
+
 
