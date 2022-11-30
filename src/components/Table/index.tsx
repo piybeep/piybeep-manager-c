@@ -120,7 +120,7 @@ export default function Table(props: TableProps) {
 								case "link": {
 									return (
 										<td key={cell.text} title={cell.text}>
-											<a href={cell.text} target="_blank">
+											<a href={cell.text} target="_blank" rel="noreferrer">
 												{cell.text
 													.replace("https://", "")
 													.replace("http://", "")}
@@ -149,5 +149,4 @@ export default function Table(props: TableProps) {
 		</table>
 	);
 }
-
 
