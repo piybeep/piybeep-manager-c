@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Button from "../Button";
 import s from "./Table.module.scss";
 
 type TitleType = {
@@ -26,12 +26,11 @@ export default function Table(props: TableProps) {
 			<thead>
 				<tr>
 					{props.titles.map((t) => (
-						<th>
+						<th key={t.text}>
 							<span
 								className={t.sort ? (t.sort === "down" ? s.down : s.up) : ""}
 							>
-								{t.text}
-								{t.icon ? <Image src={t.icon} alt="" /> : ""}
+								<Button icon={t.icon} text={t.text} />
 							</span>
 						</th>
 					))}

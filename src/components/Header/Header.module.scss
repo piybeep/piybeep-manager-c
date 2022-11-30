@@ -49,25 +49,5 @@
 			}
 		}
 	}
-
-	.logout {
-		cursor: pointer;
-		display: flex;
-		align-items: center;
-		column-gap: 10px;
-		background: transparent;
-		color: inherit;
-		border: none;
-		font-weight: 400;
-		font-size: 16px;
-		line-height: 19px;
-		border-radius: 6px;
-		transition: all 0.2s ease-in-out;
-		padding: 3px 6px;
-
-		&:hover {
-			background: #232328;
-		}
-	}
 }
 

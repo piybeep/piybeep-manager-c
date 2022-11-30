@@ -6,6 +6,7 @@ import Shape from "../../../public/svg/Shape.svg";
 import Logout from "../../../public/svg/Logout.svg";
 
 import s from "./Header.module.scss";
+import Button from "../Button";
 
 type NavItem = {
 	title: string;
@@ -38,10 +39,7 @@ export default function Header(props: HeaderProps) {
 				)}
 			</span>
 			<span className={s.right}>
-				<button className={s.logout}>
-					Выйти
-					<Image alt="" src={Logout} />
-				</button>
+				<Button icon={Logout} text="Выйти" />
 			</span>
 		</header>
 	);
