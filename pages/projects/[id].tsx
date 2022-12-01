@@ -20,12 +20,13 @@ export default function ProjectItem() {
 		(i) => Number(i.project?.id) === Number(query?.id),
 	);
 
+	const [projectName, setProjectName] = React.useState<string>();
+
 	const [navItems, setNavItems] = React.useState<HeaderProps["items"]>([
 		{ link: "/", title: "Проекты" },
 	]);
 
-	navItems?.length == 1 &&
-		project?.project?.id &&
+	if (navItems?.length == 1 && project?.project?.id) {
 		setNavItems((i) => {
 			i!.push({
 				link: "/projects/" + project.project?.id,
@@ -33,6 +34,8 @@ export default function ProjectItem() {
 			});
 			return i;
 		});
+		setProjectName(project?.cells[0].text);
+	}
 
 	const [headerOptions, setHeaderOptions] = React.useState<HeaderProps>({
 		items: navItems,
@@ -41,9 +44,9 @@ export default function ProjectItem() {
 	return (
 		<>
 			<Head>
-				<title>Piybeep Manager</title>
+				<title>Piybeep Manager - {projectName}</title>
 				<meta name="description" content="Piybeep Manager Panel" />
-				<link rel="icon" href="/favicon.ico" />
+				<link rel="icon" href={"/favicon.ico"} />
 			</Head>
 			<Header {...headerOptions} />
 			<main className="home_page">
@@ -58,7 +61,7 @@ export default function ProjectItem() {
 						{
 							project: { id: 1 },
 							cells: [
-								{ text: "Сервер 1" },
+								{ text: "Сервер #1" },
 								{ text: "176.57.208.229" },
 								{ text: "2022.01.10 12:32", type: "date" },
 								{ text: "Загрузить", type: "button", icon: Upload },
@@ -67,7 +70,7 @@ export default function ProjectItem() {
 						{
 							project: { id: 1 },
 							cells: [
-								{ text: "Сервер 2" },
+								{ text: "Сервер #2" },
 								{ text: "176.57.208.229" },
 								{ text: "2022.11.15 12:32", type: "date" },
 								{ text: "Загрузить", type: "button", icon: Upload },
@@ -76,7 +79,7 @@ export default function ProjectItem() {
 						{
 							project: { id: 1 },
 							cells: [
-								{ text: "Сервер 3" },
+								{ text: "Сервер #3" },
 								{ text: "176.57.208.229" },
 								{ text: "2022.08.20 12:32:10", type: "date" },
 								{ text: "Загрузить", type: "button", icon: Upload },

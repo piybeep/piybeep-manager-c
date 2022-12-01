@@ -26,6 +26,17 @@ export interface TableProps {
 	}[];
 }
 
+const COLORS: Record<string, string> = {
+	"В планах": "#8E8E8E",
+	"В очереди": "#FDBB8B",
+	"В разработке (приоритет)": "#FF8D8D",
+	"В разработке (дизайн)": "#FF8DED",
+	"В разработке": "#BF8DFF",
+	"В заморозке": "#7EB2FF",
+	"Поддержка": "#FFE68B",
+	"Завершено": "#93FF82",
+};
+
 export default function Table(props: TableProps) {
 	const [showPopup, setShowPopup] = React.useState(false);
 
@@ -33,7 +44,7 @@ export default function Table(props: TableProps) {
 
 	return (
 		<div className={s.table_wrapper}>
-			{/* <SortPopup
+			<SortPopup
 				className={s.sort_popup}
 				show={showPopup}
 				close={close}
@@ -67,7 +78,7 @@ export default function Table(props: TableProps) {
 						active: true,
 					},
 				]}
-			/> */}
+			/>
 			<table>
 				<thead>
 					<tr>
@@ -76,14 +87,8 @@ export default function Table(props: TableProps) {
 								<span
 									className={t.sort ? (t.sort === "down" ? s.down : s.up) : ""}
 								>
-									{t.text === "Статус" || t.text === "Загрузка" ? (
-										<Button
-											icon={t.icon}
-											text={t.text}
-											onClick={
-												t.text === "Статус" ? close : () => alert(t.text)
-											}
-										/>
+									{t.text === "Статус" ? (
+										<Button icon={t.icon} text={t.text} onClick={close} />
 									) : (
 										<Button icon={t.icon} text={t.text} />
 									)}
@@ -98,8 +103,8 @@ export default function Table(props: TableProps) {
 							key={index}
 							onClick={(e: any) => {
 								// console.log(e.target.tagName);
-								e.target.tagName !== "A" && Router.push("/projects/" + row.project?.id)
-								
+								e.target.tagName !== "A" &&
+									Router.push("/projects/" + row.project?.id);
 							}}
 						>
 							{row.cells.map((cell) => (
@@ -112,5 +117,4 @@ export default function Table(props: TableProps) {
 		</div>
 	);
 }
-
 
