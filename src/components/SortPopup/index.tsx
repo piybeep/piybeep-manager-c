@@ -3,6 +3,7 @@ import s from "./SortPopup.module.scss";
 
 import Sort from "../../../public/svg/Sort.svg";
 import React from "react";
+import classNames from "classnames";
 
 type ListItem = {
 	text: string;
@@ -22,11 +23,10 @@ export default function SortPopup(props: SortPopupProps) {
 
 	React.useEffect(() => {
 		const handleClickOutside = (event: any) => {
-			console.log(event);
+			// console.log(event);
 
 			if (ref.current && !ref.current.contains(event.target)) {
-				// if (event.target.innerText != "Статус")
-				// props.close && props.close();
+				props.close && props.close();
 			}
 		};
 		document.addEventListener("click", handleClickOutside, true);
@@ -37,15 +37,14 @@ export default function SortPopup(props: SortPopupProps) {
 
 	return (
 		<div
-			className={[
-				s.sort_popup,
-				props.className,
-				props.show ? "popup__show" : "",
-			].join(" ")}
+			className={classNames(s.sort_popup, {
+				[String(props.className)]: props.className,
+				"popup__show": props.show,
+			})}
 			ref={ref}
 		>
 			<h4>
-				<Button text={"Сортировать"} icon={Sort} className={s.button} />
+				<Button value={"Сортировать"} icon={Sort} className={s.button} />
 			</h4>
 			<ul className={s.list}>
 				{props.list?.length
@@ -61,3 +60,4 @@ export default function SortPopup(props: SortPopupProps) {
 		</div>
 	);
 }
+

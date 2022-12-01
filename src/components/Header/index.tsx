@@ -39,7 +39,7 @@ export default function Header(props: HeaderProps) {
 				)}
 			</span>
 			<span className={s.right}>
-				<Button icon={Logout} text="Выйти" />
+				<Button icon={Logout} value="Выйти" />
 			</span>
 		</header>
 	);

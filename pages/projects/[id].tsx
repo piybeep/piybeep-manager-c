@@ -34,8 +34,11 @@ export default function ProjectItem() {
 			});
 			return i;
 		});
-		setProjectName(project?.cells[0].text);
 	}
+
+	React.useEffect(() => {
+		setProjectName(project?.cells[0].text);
+	}, [project?.cells[0].text]);
 
 	const [headerOptions, setHeaderOptions] = React.useState<HeaderProps>({
 		items: navItems,
@@ -92,3 +95,4 @@ export default function ProjectItem() {
 		</>
 	);
 }
+

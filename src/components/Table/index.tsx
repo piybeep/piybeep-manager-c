@@ -88,9 +88,15 @@ export default function Table(props: TableProps) {
 									className={t.sort ? (t.sort === "down" ? s.down : s.up) : ""}
 								>
 									{t.text === "Статус" ? (
-										<Button icon={t.icon} text={t.text} onClick={close} />
+										<Button
+											icon={t.icon}
+											value={t.text}
+											onClick={() => {
+												setShowPopup(true);
+											}}
+										/>
 									) : (
-										<Button icon={t.icon} text={t.text} />
+										<Button icon={t.icon} value={t.text} disabled />
 									)}
 								</span>
 							</th>
@@ -102,7 +108,6 @@ export default function Table(props: TableProps) {
 						<tr
 							key={index}
 							onClick={(e: any) => {
-								// console.log(e.target.tagName);
 								e.target.tagName !== "A" &&
 									Router.push("/projects/" + row.project?.id);
 							}}
@@ -117,4 +122,7 @@ export default function Table(props: TableProps) {
 		</div>
 	);
 }
+
+
+
 
