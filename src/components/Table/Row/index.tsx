@@ -13,7 +13,7 @@ export default function Row({ cell }: Record<string, any>) {
 		case "date":
 			return <CellDate date={cell.text} />;
 		case "button":
-			return <CellButton text={cell.text} icon={cell.icon} />;
+			return <CellButton text={cell.text} icon={cell.icon} action={cell.action} />;
 		default:
 			return <CellText text={cell.text} />;
 	}

@@ -9,7 +9,7 @@ import Alphabet from "../public/svg/Alphabet.svg";
 import Share from "../public/svg/Share.svg";
 import Update from "../public/svg/Update.svg";
 import Status from "../public/svg/Status.svg";
-import { TableProps } from '../src/components/Table/index';
+import { TableProps } from "../src/components/Table/index";
 
 export const DATA: TableProps = {
 	titles: [
@@ -56,22 +56,19 @@ export default function Index() {
 	return (
 		<>
 			<Head>
-				<title>Piybeep Manager</title>
-				<meta name="description" content="Piybeep Manager Panel" />
+				<title>Проекты - Piybeep Manager</title>
+				<meta
+					name="description"
+					content="Страница с проектами Piybeep Manager"
+				/>
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<Header {...headerOptions} />
 			<main className="home_page">
-				<Table
-					titles={DATA.titles}
-					rows={DATA.rows}
-				/>
+				<Table titles={DATA.titles} rows={DATA.rows} />
 			</main>
 			<Footer />
 		</>
 	);
 }
-
-
-
 

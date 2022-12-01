@@ -9,6 +9,10 @@
 	font-weight: 400;
 	font-size: 13px;
 	line-height: 16px;
-    cursor: default;
+	cursor: default;
+
+	&.center {
+		justify-content: center;
+	}
 }
 

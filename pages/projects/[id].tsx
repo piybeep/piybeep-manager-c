@@ -47,8 +47,8 @@ export default function ProjectItem() {
 	return (
 		<>
 			<Head>
-				<title>Piybeep Manager - {projectName}</title>
-				<meta name="description" content="Piybeep Manager Panel" />
+				<title>{projectName} - Piybeep Manager</title>
+				<meta name="description" content={"Страница проекта " + projectName} />
 				<link rel="icon" href={"/favicon.ico"} />
 			</Head>
 			<Header {...headerOptions} />
@@ -62,30 +62,45 @@ export default function ProjectItem() {
 					]}
 					rows={[
 						{
-							project: { id: 1 },
+							project: { id: Number(query?.id) },
 							cells: [
 								{ text: "Сервер #1" },
 								{ text: "176.57.208.229" },
 								{ text: "2022.01.10 12:32", type: "date" },
-								{ text: "Загрузить", type: "button", icon: Upload },
+								{
+									text: "Загрузить",
+									type: "button",
+									icon: Upload,
+									action: () => alert("ok"),
+								},
 							],
 						},
 						{
-							project: { id: 1 },
+							project: { id: Number(query?.id) },
 							cells: [
 								{ text: "Сервер #2" },
 								{ text: "176.57.208.229" },
 								{ text: "2022.11.15 12:32", type: "date" },
-								{ text: "Загрузить", type: "button", icon: Upload },
+								{
+									text: "Загрузить",
+									type: "button",
+									icon: Upload,
+									action: () => alert("kok"),
+								},
 							],
 						},
 						{
-							project: { id: 1 },
+							project: { id: Number(query?.id) },
 							cells: [
 								{ text: "Сервер #3" },
 								{ text: "176.57.208.229" },
 								{ text: "2022.08.20 12:32:10", type: "date" },
-								{ text: "Загрузить", type: "button", icon: Upload },
+								{
+									text: "Загрузить",
+									type: "button",
+									icon: Upload,
+									action: () => alert("oko"),
+								},
 							],
 						},
 					]}

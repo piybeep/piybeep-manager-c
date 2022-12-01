@@ -8,10 +8,14 @@ const SCP = Source_Code_Pro({
 	subsets: ["cyrillic", "latin"],
 });
 
-export default function Footer() {
+export default function Footer(props: { center?: boolean }) {
 	const [year, setYear] = React.useState(new Date().getFullYear());
 	return (
-		<footer className={s.footer}>
+		<footer
+			className={classNames(s.footer, {
+				[s.center]: props.center,
+			})}
+		>
 			<span className={classNames(s.info, SCP.className)}>
 				<span onClick={() => setYear((v) => ++v)}>{year}</span> piybeep. v0.0.1
 			</span>
