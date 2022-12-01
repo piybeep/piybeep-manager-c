@@ -17,7 +17,7 @@ export interface HeaderProps {
 	items?: NavItem[];
 }
 
-export default function Header(props: HeaderProps) {
+export default function Header(props: HeaderProps) {	
 	return (
 		<header className={s.header}>
 			<span className={s.left}>
