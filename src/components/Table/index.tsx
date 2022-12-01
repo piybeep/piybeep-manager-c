@@ -2,6 +2,8 @@ import Button from "../Button";
 import s from "./Table.module.scss";
 import SortPopup from "../SortPopup";
 import React from "react";
+import Router from "next/router";
+import Row from "./Row";
 
 type TitleType = {
 	text: string;
@@ -9,9 +11,11 @@ type TitleType = {
 	sort?: "up" | "down" | false;
 };
 
-type RowType = {
+export type RowType = {
 	text: string;
-	type?: "date" | "link" | "enum";
+	type?: "date" | "link" | "enum" | "button";
+	action?: () => void;
+	icon?: any;
 };
 
 export interface TableProps {
@@ -24,25 +28,12 @@ export interface TableProps {
 
 export default function Table(props: TableProps) {
 	const [showPopup, setShowPopup] = React.useState(false);
-	const COLORS = {
-		"В планах": "#8E8E8E",
-		"В очереди": "#FDBB8B",
-		"В разработке (приоритет)": "#FF8D8D",
-		"В разработке (дизайн)": "#FF8DED",
-		"В разработке": "#BF8DFF",
-		"В заморозке": "#7EB2FF",
-		"Поддержка": "#FFE68B",
-		"Завершено": "#93FF82",
-	};
 
-	const close = () => {
-		console.log("close", showPopup);
+	const close = () => setShowPopup((v) => !v);
 
-		setShowPopup((v) => !v);
-	};
 	return (
-		<table className={s.table}>
-			<SortPopup
+		<div className={s.table_wrapper}>
+			{/* <SortPopup
 				className={s.sort_popup}
 				show={showPopup}
 				close={close}
@@ -76,77 +67,49 @@ export default function Table(props: TableProps) {
 						active: true,
 					},
 				]}
-			/>
-			<thead>
-				<tr>
-					{props.titles.map((t) => (
-						<th key={t.text}>
-							<span
-								className={t.sort ? (t.sort === "down" ? s.down : s.up) : ""}
-							>
-								{t.text == "Статус" ? (
-									<Button icon={t.icon} text={t.text} onClick={close} />
-								) : (
-									<Button icon={t.icon} text={t.text} />
-								)}
-							</span>
-						</th>
-					))}
-				</tr>
-			</thead>
-			<tbody>
-				{props.rows.map((row) => (
-					<tr key={row.project?.id}>
-						{row.cells.map((cell) => {
-							switch (cell.type) {
-								case "enum": {
-									const colors = {
-										"В планах": "#8E8E8E",
-										"В очереди": "#FDBB8B",
-										"В разработке (приоритет)": "#FF8D8D",
-										"В разработке (дизайн)": "#FF8DED",
-										"В разработке": "#BF8DFF",
-										"В заморозке": "#7EB2FF",
-										"Поддержка": "#FFE68B",
-										"Завершено": "#93FF82",
-									};
-									return (
-										// @ts-ignore
-										<td key={cell.text} style={{ color: colors[cell.text] }}>
-											{cell.text}
-										</td>
-									);
-								}
-								case "link": {
-									return (
-										<td key={cell.text} title={cell.text}>
-											<a href={cell.text} target="_blank">
-												{cell.text
-													.replace("https://", "")
-													.replace("http://", "")}
-											</a>
-										</td>
-									);
-								}
-								case "date": {
-									return (
-										<td
-											key={cell.text}
-											title={new Date(cell.text).toLocaleString()}
-										>
-											{new Date(cell.text).toLocaleDateString()}
-										</td>
-									);
-								}
-								default: {
-									return <td key={cell.text}>{cell.text}</td>;
-								}
-							}
-						})}
+			/> */}
+			<table>
+				<thead>
+					<tr>
+						{props.titles.map((t) => (
+							<th key={t.text}>
+								<span
+									className={t.sort ? (t.sort === "down" ? s.down : s.up) : ""}
+								>
+									{t.text === "Статус" || t.text === "Загрузка" ? (
+										<Button
+											icon={t.icon}
+											text={t.text}
+											onClick={
+												t.text === "Статус" ? close : () => alert(t.text)
+											}
+										/>
+									) : (
+										<Button icon={t.icon} text={t.text} />
+									)}
+								</span>
+							</th>
+						))}
 					</tr>
-				))}
-			</tbody>
-		</table>
+				</thead>
+				<tbody>
+					{props.rows.map((row, index) => (
+						<tr
+							key={index}
+							onClick={(e: any) => {
+								// console.log(e.target.tagName);
+								e.target.tagName !== "A" && Router.push("/projects/" + row.project?.id)
+								
+							}}
+						>
+							{row.cells.map((cell) => (
+								<Row key={cell.text} cell={cell} />
+							))}
+						</tr>
+					))}
+				</tbody>
+			</table>
+		</div>
 	);
 }
 
