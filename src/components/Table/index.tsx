@@ -40,7 +40,7 @@ const COLORS: Record<string, string> = {
 export default function Table(props: TableProps) {
 	const [showPopup, setShowPopup] = React.useState(false);
 
-	const close = () => setShowPopup((v) => !v);
+	const close = () => setShowPopup(false);
 
 	return (
 		<div className={s.table_wrapper}>
