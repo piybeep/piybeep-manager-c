@@ -60,6 +60,7 @@
 			}
 		}
 
+		// --- [подсветка когда пароль показывается] ---
 		// &[type="text"] {
 		// 	~ button {
 		// 		svg path {
@@ -91,35 +92,44 @@
 		}
 	}
 
-	> button {
-		cursor: pointer;
-		color: #ececec;
-		background: transparent;
-		border: 1px solid #98ec65;
-		border-radius: 10px;
-
+	span {
 		display: flex;
-		justify-content: center;
+		flex-direction: column;
+		row-gap: 16px;
 		align-items: center;
-		padding: 10px 20px;
-		gap: 10px;
-
-		font-weight: 400;
-		font-size: 16px;
-		line-height: 19px;
-
-		transition: all 0.2s;
-
-		svg path {
-			transition: all 0.2s;
-			fill: #ececec;
+		.error {
+			color: #ff8d8d;
 		}
+		button[type="submit"] {
+			cursor: pointer;
+			color: #ececec;
+			background: transparent;
+			border: 1px solid #98ec65;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			border-radius: 10px;
 
-		&:hover {
-			background: #98ec65;
-			color: #100f13;
+			padding: 10px 20px;
+			gap: 10px;
+
+			font-weight: 400;
+			font-size: 16px;
+			line-height: 19px;
+
+			transition: all 0.2s;
+
 			svg path {
-				fill: #100f13;
+				transition: all 0.2s;
+				fill: #ececec;
+			}
+
+			&:hover {
+				background: #98ec65;
+				color: #100f13;
+				svg path {
+					fill: #100f13;
+				}
 			}
 		}
 	}
@@ -141,6 +151,15 @@
 		font-size: 16px;
 		line-height: 19px;
 		cursor: text;
+	}
+
+	&__error {
+		label {
+			color: #ff8d8d;
+		}
+		input {
+			border-bottom: 2px solid #ff8d8d;
+		}
 	}
 }
 

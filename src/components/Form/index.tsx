@@ -1,24 +1,76 @@
 import React from "react";
+import Router from "next/router";
 
 import s from "./Form.module.scss";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import { useRouter } from "next/router";
+import classNames from "classnames";
 
 export default function Form() {
 	const [showPass, setShowPass] = React.useState(false);
+	const [formError, setFormError] = React.useState<string>();
+	const router = useRouter();
+
+	const formik = useFormik({
+		initialValues: {
+			login: "",
+			password: "",
+		},
+		onSubmit: (v) => {
+			console.log(v);
+
+			if (v.login == "admin" && v.password == "minad") {
+				router.push("/");
+			} else {
+				setFormError("Неверный логин или пароль");
+			}
+		},
+		validateOnChange: false,
+		validateOnBlur: false,
+		validationSchema: yup.object({
+			login: yup.string().trim().required("Вы не ввели логин"),
+			password: yup.string().trim().required("Вы не ввели пароль"),
+		}),
+	});
 	return (
-		<form className={s.box}>
+		<form className={s.box} onSubmit={formik.handleSubmit}>
 			<h3>Авторизация</h3>
-			<div className={s.form__input}>
-				<input id="login" type="text" name="login" required />
-				<label htmlFor="login">Логин</label>
-			</div>
-			<div className={s.form__input}>
+			<div
+				className={classNames(s.form__input, {
+					[s.form__input__error]: formik.errors.login,
+				})}
+			>
 				<input
+					value={formik.values.login}
+					onChange={formik.handleChange}
+					onBlur={formik.handleBlur}
+					id="login"
+					type="text"
+					name="login"
+					required
+				/>
+				<label htmlFor="login">
+					{formik.errors.login ? String(formik.errors.login) : "Логин"}
+				</label>
+			</div>
+			<div
+				className={classNames(s.form__input, {
+					[s.form__input__error]: formik.errors.password,
+				})}
+			>
+				<input
+					value={formik.values.password}
+					onChange={formik.handleChange}
+					onBlur={formik.handleBlur}
 					id="password"
 					type={showPass ? "text" : "password"}
 					name="password"
 					required
 				/>
-				<label htmlFor="password">Пароль</label>
+				<label htmlFor="password">
+					{formik.errors.password ? String(formik.errors.password) : "Пароль"}
+				</label>
 				<button type="button" onClick={() => setShowPass((v) => !v)}>
 					<svg
 						width="18"
@@ -36,23 +88,26 @@ export default function Form() {
 					</svg>
 				</button>
 			</div>
-			<button type="submit">
-				Войти
-				<svg
-					width="14"
-					height="15"
-					viewBox="0 0 14 15"
-					fill="none"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<path
-						fill-rule="evenodd"
-						clip-rule="evenodd"
-						d="M7.14448 1.38877C7.47584 1.38693 7.74297 1.11681 7.74113 0.785441C7.73928 0.454075 7.46916 0.186946 7.1378 0.188791L1.15019 0.222137C0.523917 0.225624 0.0180664 0.734301 0.0180664 1.36058V13.2067C0.0180664 13.8379 0.531644 14.3487 1.16287 14.3452L7.14448 14.3118C7.47584 14.31 7.74297 14.0399 7.74113 13.7085C7.73928 13.3772 7.46916 13.11 7.1378 13.1119L1.21807 13.1448V1.42178L7.14448 1.38877ZM10.5424 4.43931C10.3081 4.20499 9.92817 4.20499 9.69385 4.43931C9.45954 4.67362 9.45954 5.05352 9.69385 5.28784L11.0927 6.68665H5.14111C4.80974 6.68665 4.54111 6.95528 4.54111 7.28665C4.54111 7.61802 4.80974 7.88665 5.14111 7.88665H11.0927L9.69385 9.28546C9.45954 9.51978 9.45954 9.89967 9.69385 10.134C9.92817 10.3683 10.3081 10.3683 10.5424 10.134L12.9655 7.71091C13.1998 7.4766 13.1998 7.0967 12.9655 6.86238L10.5424 4.43931Z"
-						fill="#DCDCDC"
-					/>
-				</svg>
-			</button>
+			<span>
+				<button type="submit">
+					Войти
+					<svg
+						width="14"
+						height="15"
+						viewBox="0 0 14 15"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							fill-rule="evenodd"
+							clip-rule="evenodd"
+							d="M7.14448 1.38877C7.47584 1.38693 7.74297 1.11681 7.74113 0.785441C7.73928 0.454075 7.46916 0.186946 7.1378 0.188791L1.15019 0.222137C0.523917 0.225624 0.0180664 0.734301 0.0180664 1.36058V13.2067C0.0180664 13.8379 0.531644 14.3487 1.16287 14.3452L7.14448 14.3118C7.47584 14.31 7.74297 14.0399 7.74113 13.7085C7.73928 13.3772 7.46916 13.11 7.1378 13.1119L1.21807 13.1448V1.42178L7.14448 1.38877ZM10.5424 4.43931C10.3081 4.20499 9.92817 4.20499 9.69385 4.43931C9.45954 4.67362 9.45954 5.05352 9.69385 5.28784L11.0927 6.68665H5.14111C4.80974 6.68665 4.54111 6.95528 4.54111 7.28665C4.54111 7.61802 4.80974 7.88665 5.14111 7.88665H11.0927L9.69385 9.28546C9.45954 9.51978 9.45954 9.89967 9.69385 10.134C9.92817 10.3683 10.3081 10.3683 10.5424 10.134L12.9655 7.71091C13.1998 7.4766 13.1998 7.0967 12.9655 6.86238L10.5424 4.43931Z"
+							fill="#DCDCDC"
+						/>
+					</svg>
+				</button>
+				{formError ? <span className={s.error}>{formError}</span> : ""}
+			</span>
 		</form>
 	);
 }

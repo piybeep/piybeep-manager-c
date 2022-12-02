@@ -1,5 +1,13 @@
+import React from "react";
+import { useRouter } from "next/router";
+
 export default function Projects() {
-  return (
-    <div>Projects</div>
-  )
+	const router = useRouter();
+
+	React.useEffect(() => {
+		router.push("/");
+	}, []);
+
+	return <p>Перенаправление...</p>;
 }
+

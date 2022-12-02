@@ -50,7 +50,7 @@ export default function Table(props: TableProps) {
 				close={close}
 				list={[
 					{ text: "В планах", color: COLORS["В планах"] },
-					{ text: "В очереди", color: COLORS["В очереди"], active: true },
+					{ text: "В очереди", color: COLORS["В очереди"] },
 					{
 						text: "В разработке (приоритет)",
 						color: COLORS["В разработке (приоритет)"],
@@ -58,11 +58,11 @@ export default function Table(props: TableProps) {
 					{
 						text: "В разработке (дизайн)",
 						color: COLORS["В разработке (дизайн)"],
-						active: true,
 					},
 					{
 						text: "В разработке",
 						color: COLORS["В разработке"],
+						active: true,
 					},
 					{
 						text: "В заморозке",
@@ -71,6 +71,7 @@ export default function Table(props: TableProps) {
 					{
 						text: "Поддержка",
 						color: COLORS["Поддержка"],
+						active: true,
 					},
 					{
 						text: "Завершено",
@@ -122,7 +123,4 @@ export default function Table(props: TableProps) {
 		</div>
 	);
 }
-
-
-
 

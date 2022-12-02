@@ -7,6 +7,7 @@ import Logout from "../../../public/svg/Logout.svg";
 
 import s from "./Header.module.scss";
 import Button from "../Button";
+import Router from "next/router";
 
 type NavItem = {
 	title: string;
@@ -17,7 +18,7 @@ export interface HeaderProps {
 	items?: NavItem[];
 }
 
-export default function Header(props: HeaderProps) {	
+export default function Header(props: HeaderProps) {
 	return (
 		<header className={s.header}>
 			<span className={s.left}>
@@ -39,7 +40,11 @@ export default function Header(props: HeaderProps) {
 				)}
 			</span>
 			<span className={s.right}>
-				<Button icon={Logout} value="Выйти" />
+				<Button
+					icon={Logout}
+					value="Выйти"
+					onClick={() => Router.push("/sign")}
+				/>
 			</span>
 		</header>
 	);

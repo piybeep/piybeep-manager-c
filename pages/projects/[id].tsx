@@ -11,13 +11,12 @@ import Share from "../../public/svg/Share.svg";
 import Update from "../../public/svg/Update.svg";
 import Status from "../../public/svg/Status.svg";
 import Upload from "../../public/svg/Upload.svg";
+import Preloader from "../../src/components/Preloader";
 
-import { DATA } from "../index";
-
-export default function ProjectItem() {
+export default function ProjectItem(props: any) {
 	const { query } = useRouter();
-	const project = DATA.rows.find(
-		(i) => Number(i.project?.id) === Number(query?.id),
+	const project = props.rows.find(
+		(i: Record<string, any>) => Number(i.project?.id) === Number(query?.id),
 	);
 
 	const [projectName, setProjectName] = React.useState<string>();
@@ -43,12 +42,14 @@ export default function ProjectItem() {
 	const [headerOptions, setHeaderOptions] = React.useState<HeaderProps>({
 		items: navItems,
 	});
-
 	return (
 		<>
 			<Head>
-				<title>{projectName} - Piybeep Manager</title>
-				<meta name="description" content={"Страница проекта " + projectName} />
+				<title>{project?.cells[0].text ?? "Загрузка"} - Piybeep Manager</title>
+				<meta
+					name="description"
+					content={"Страница проекта " + project?.cells[0].text}
+				/>
 				<link rel="icon" href={"/favicon.ico"} />
 			</Head>
 			<Header {...headerOptions} />
@@ -109,5 +110,16 @@ export default function ProjectItem() {
 			<Footer />
 		</>
 	);
+}
+
+export async function getServerSideProps() {
+	const response = await fetch("http://localhost:3000/api/projects");
+	const data = await response.json();
+
+	return {
+		props: {
+			rows: data,
+		},
+	};
 }
 
