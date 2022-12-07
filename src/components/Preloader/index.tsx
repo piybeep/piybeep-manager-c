@@ -6,16 +6,16 @@ import s from "./Preloader.module.scss";
 import Spin from "../../../public/svg/Spin.svg";
 
 export default function Preloader(props: { show: boolean }) {
-	const [show, setShow] = React.useState(false);
+	// const [show, setShow] = React.useState(false);
 
-	React.useEffect(() => {
-		setShow(props.show);
-	}, [props.show]);
+	// React.useEffect(() => {
+	// 	setShow(props.show);
+	// }, [props.show]);
 
 	return (
 		<div
 			className={classNames(s.wrapper, {
-				[s.show]: show,
+				[s.show]: props.show,
 			})}
 		>
 			<h3>
@@ -25,3 +25,4 @@ export default function Preloader(props: { show: boolean }) {
 		</div>
 	);
 }
+
