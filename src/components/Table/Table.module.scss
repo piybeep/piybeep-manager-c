@@ -60,6 +60,11 @@
 					&:last-child {
 						text-align: end;
 					}
+					span {
+						&:hover {
+							color: #98ec65;
+						}
+					}
 				}
 
 				&:hover {

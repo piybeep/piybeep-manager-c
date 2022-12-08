@@ -17,7 +17,7 @@ export default function Footer(props: { center?: boolean }) {
 			})}
 		>
 			<span className={classNames(s.info, SCP.className)}>
-				<span onClick={() => setYear((v) => ++v)}>{year}</span> piybeep. v0.0.1
+				<span onClick={() => setYear((v) => ++v)}>{year}</span> piybeep. v0.1.0
 			</span>
 		</footer>
 	);

@@ -7,7 +7,7 @@ import classNames from "classnames";
 
 type ListItem = {
 	text: string;
-	color?: string;
+	color: string;
 	active?: boolean;
 };
 
@@ -15,7 +15,8 @@ export interface SortPopupProps {
 	list: ListItem[];
 	className: string;
 	show?: boolean;
-	close?: any;
+	close: () => void;
+	updateList: (list: ListItem[]) => void;
 }
 
 export default function SortPopup(props: SortPopupProps) {
@@ -23,8 +24,6 @@ export default function SortPopup(props: SortPopupProps) {
 
 	React.useEffect(() => {
 		const handleClickOutside = (event: any) => {
-			// console.log(event);
-
 			if (ref.current && !ref.current.contains(event.target)) {
 				props.close && props.close();
 			}
@@ -35,6 +34,15 @@ export default function SortPopup(props: SortPopupProps) {
 		};
 	}, [props.close]);
 
+	const selectItem = (text: string) => {
+		const newList = props.list?.map((i) => {
+			if (i.text == text) return { ...i, active: !i.active };
+			else return { ...i };
+		});
+
+		props.updateList(newList);
+	};
+
 	return (
 		<div
 			className={classNames(s.sort_popup, {
@@ -43,14 +51,18 @@ export default function SortPopup(props: SortPopupProps) {
 			})}
 			ref={ref}
 		>
-			<h4>
+			{/* <h4>
 				<Button value={"Сортировать"} icon={Sort} className={s.button} />
-			</h4>
+			</h4> */}
 			<ul className={s.list}>
 				{props.list?.length
 					? props.list.map((i) => {
 							return (
-								<li key={i.text} style={{ color: i.color }}>
+								<li
+									key={i.text}
+									style={{ color: i.color }}
+									onClick={() => selectItem(i.text)}
+								>
 									<span className={i.active ? s.active : ""}>•</span> {i.text}
 								</li>
 							);

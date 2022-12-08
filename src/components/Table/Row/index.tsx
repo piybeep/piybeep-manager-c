@@ -15,6 +15,8 @@ export default function Row({ cell }: Record<string, any>) {
 		case "button":
 			return <CellButton text={cell.text} icon={cell.icon} action={cell.action} />;
 		default:
-			return <CellText text={cell.text} />;
+			return <CellText text={cell.text} copy={cell.copy} />;
 	}
 }
+
+

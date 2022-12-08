@@ -6,9 +6,10 @@ export default function CellLink({ text }: { text: string }) {
 					{text.replace("https://", "").replace("http://", "")}
 				</a>
 			) : (
-				"Отсутствует"
+				<small style={{ color: "#8E8E8E" }}>404</small>
 			)}
 		</td>
 	);
 }
+
 

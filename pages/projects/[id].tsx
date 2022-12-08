@@ -1,6 +1,5 @@
 import Head from "next/head";
 import React from "react";
-import { useRouter } from "next/router";
 
 import Footer from "../../src/components/Footer";
 import Header, { HeaderProps } from "../../src/components/Header";
@@ -11,33 +10,47 @@ import Share from "../../public/svg/Share.svg";
 import Update from "../../public/svg/Update.svg";
 import Status from "../../public/svg/Status.svg";
 import Upload from "../../public/svg/Upload.svg";
-import Preloader from "../../src/components/Preloader";
+import client from "../../src/api/apollo-client";
+import { gql } from "@apollo/client";
 
 export default function ProjectItem(props: any) {
-	const { query } = useRouter();
-	const project = props.rows.find(
-		(i: Record<string, any>) => Number(i.project?.id) === Number(query?.id),
-	);
-
-	const [projectName, setProjectName] = React.useState<string>();
+	const projectName = props?.project?.name ?? undefined;
 
 	const [navItems, setNavItems] = React.useState<HeaderProps["items"]>([
-		{ link: "/", title: "Проекты" },
+		{ link: "/projects", title: "Проекты" },
 	]);
 
-	if (navItems?.length == 1 && project?.project?.id) {
+	if (navItems?.length == 1 && props?.project?.id) {
 		setNavItems((i) => {
 			i!.push({
-				link: "/projects/" + project.project?.id,
-				title: project.cells[0].text,
+				link: "/projects/" + props?.project?.id,
+				title: projectName,
 			});
 			return i;
 		});
 	}
 
+	const [rows, setRows] = React.useState([]);
+
 	React.useEffect(() => {
-		setProjectName(project?.cells[0].text);
-	}, [project?.cells[0].text]);
+		const _rows = props?.servers?.map((sr: any) => {
+			return {
+				server: { id: sr.id },
+				cells: [
+					{ text: sr.name },
+					{ text: sr.ip, copy: true },
+					{ text: new Date(sr.updatedAt), type: "date" },
+					{
+						text: "Загрузить",
+						type: "button",
+						icon: Upload,
+						action: () => alert("in dev"),
+					},
+				],
+			};
+		});
+		setRows(_rows);
+	}, [props.servers]);
 
 	const [headerOptions, setHeaderOptions] = React.useState<HeaderProps>({
 		items: navItems,
@@ -45,81 +58,74 @@ export default function ProjectItem(props: any) {
 	return (
 		<>
 			<Head>
-				<title>{project?.cells[0].text ?? "Загрузка"} - Piybeep Manager</title>
-				<meta
-					name="description"
-					content={"Страница проекта " + project?.cells[0].text}
-				/>
+				<title>{projectName ? projectName + " - " : ""}Piybeep Manager</title>
+				<meta name="description" content={"Страница проекта " + projectName} />
 				<link rel="icon" href={"/favicon.ico"} />
 			</Head>
 			<Header {...headerOptions} />
 			<main className="home_page">
-				<Table
-					titles={[
-						{ text: "Название сервера", icon: Alphabet },
-						{ text: "IP-адрес", icon: Share },
-						{ text: "Обновление", icon: Update },
-						{ text: "Загрузка", icon: Status },
-					]}
-					rows={[
-						{
-							project: { id: Number(query?.id) },
-							cells: [
-								{ text: "Сервер #1" },
-								{ text: "176.57.208.229" },
-								{ text: "2022.01.10 12:32", type: "date" },
-								{
-									text: "Загрузить",
-									type: "button",
-									icon: Upload,
-									action: () => alert("ok"),
-								},
-							],
-						},
-						{
-							project: { id: Number(query?.id) },
-							cells: [
-								{ text: "Сервер #2" },
-								{ text: "176.57.208.229" },
-								{ text: "2022.11.15 12:32", type: "date" },
-								{
-									text: "Загрузить",
-									type: "button",
-									icon: Upload,
-									action: () => alert("kok"),
-								},
-							],
-						},
-						{
-							project: { id: Number(query?.id) },
-							cells: [
-								{ text: "Сервер #3" },
-								{ text: "176.57.208.229" },
-								{ text: "2022.08.20 12:32:10", type: "date" },
-								{
-									text: "Загрузить",
-									type: "button",
-									icon: Upload,
-									action: () => alert("oko"),
-								},
-							],
-						},
-					]}
-				/>
+				{props.servers?.length ? (
+					<Table
+						titles={[
+							{ text: "Название сервера", icon: Alphabet },
+							{ text: "IP-адрес", icon: Share },
+							{ text: "Обновление", icon: Update },
+							{ text: "Загрузка", icon: Status },
+						]}
+						rows={rows}
+					/>
+				) : (
+					<p>Не найдено</p>
+				)}
 			</main>
 			<Footer />
 		</>
 	);
 }
 
-export async function getServerSideProps() {
-	const response = await fetch("http://localhost:3000/api/projects");
-	const data = await response.json();
+export async function getServerSideProps(context: any) {
+	console.log(context.params.id);
 
-	return {
-		props: {
-			rows: data,
-		},
-	};
+	try {
+		const { data, loading } = await client.query({
+			query: gql`
+				query {
+					servers {
+						id
+						name
+						ip
+						updatedAt
+					}
+					project(id: ${context.params.id}) {
+						id
+						name
+					}
+				}
+			`,
+			errorPolicy: "ignore",
+		});
+
+		if (!data) {
+			return {
+				notFound: true,
+			};
+		}
+
+		return {
+			props: {
+				servers: data.servers,
+				project: data.project,
+				loading,
+				error: null,
+			},
+		};
+	} catch (error: any) {
+		return {
+			props: {
+				projects: [],
+				error: JSON.stringify(error),
+			},
+		};
+	}
 }
 

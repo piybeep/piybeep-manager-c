@@ -26,7 +26,7 @@ export interface TableProps {
 	}[];
 }
 
-const COLORS: Record<string, string> = {
+export const COLORS: Record<string, string> = {
 	"В планах": "#8E8E8E",
 	"В очереди": "#FDBB8B",
 	"В разработке (приоритет)": "#FF8D8D",
@@ -42,43 +42,31 @@ export default function Table(props: TableProps) {
 
 	const close = () => setShowPopup(false);
 
+	const [popupList, setPopupList] = React.useState([
+		{ text: "В планах", color: COLORS["В планах"] },
+		{ text: "В очереди", color: COLORS["В очереди"] },
+		{
+			text: "В разработке (приоритет)",
+			color: COLORS["В разработке (приоритет)"],
+		},
+		{
+			text: "В разработке (дизайн)",
+			color: COLORS["В разработке (дизайн)"],
+		},
+		{ text: "В разработке", color: COLORS["В разработке"] },
+		{ text: "В заморозке", color: COLORS["В заморозке"] },
+		{ text: "Поддержка", color: COLORS["Поддержка"] },
+		{ text: "Завершено", color: COLORS["Завершено"] },
+	]);
+
 	return (
 		<div className={s.table_wrapper}>
 			<SortPopup
 				className={s.sort_popup}
 				show={showPopup}
 				close={close}
-				list={[
-					{ text: "В планах", color: COLORS["В планах"] },
-					{ text: "В очереди", color: COLORS["В очереди"] },
-					{
-						text: "В разработке (приоритет)",
-						color: COLORS["В разработке (приоритет)"],
-					},
-					{
-						text: "В разработке (дизайн)",
-						color: COLORS["В разработке (дизайн)"],
-					},
-					{
-						text: "В разработке",
-						color: COLORS["В разработке"],
-						active: true,
-					},
-					{
-						text: "В заморозке",
-						color: COLORS["В заморозке"],
-					},
-					{
-						text: "Поддержка",
-						color: COLORS["Поддержка"],
-						active: true,
-					},
-					{
-						text: "Завершено",
-						color: COLORS["Завершено"],
-						active: true,
-					},
-				]}
+				list={popupList}
+				updateList={(payload) => setPopupList(payload)}
 			/>
 			<table>
 				<thead>

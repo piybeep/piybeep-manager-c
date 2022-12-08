@@ -22,6 +22,53 @@ main {
 		opacity: 1;
 		visibility: visible;
 	}
+
+	.not_found {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+		row-gap: 10px;
+		height: 100%;
+
+		h2 {
+			margin: 0 0 30px;
+		}
+
+		&__btn {
+			cursor: pointer;
+			color: #ececec;
+			background: transparent;
+			border: 1px solid #98ec65;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			border-radius: 10px;
+
+			padding: 10px 20px;
+			gap: 10px;
+
+			font-family: inherit;
+			font-weight: 400;
+			font-size: 16px;
+			line-height: 19px;
+
+			transition: all 0.2s;
+
+			&:hover {
+				background: #98ec65;
+				color: #100f13;
+			}
+		}
+
+		a {
+			transition: 0.2s;
+			color: #ececec;
+			&:hover {
+				color: #98ec65;
+			}
+		}
+	}
 }
 
 .sign {
