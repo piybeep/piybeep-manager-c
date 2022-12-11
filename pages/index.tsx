@@ -12,15 +12,16 @@ export default function Index() {
 	return (
 		<>
 			<Head>
-				<title>Piybeep Manager</title>
+				<title>piybeep manager</title>
 				<meta
 					name="description"
 					content={"Огранизация и управление производственными проектами."}
 				/>
 				<link rel="icon" href={"/favicon.ico"} />
 			</Head>
-			<p>Перенаправление...</p>;
+			<p>Перенаправление...</p>
 		</>
 	);
 }
+
 

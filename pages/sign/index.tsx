@@ -13,13 +13,18 @@ export default function SignPage() {
 				<title>Авторизация</title>
 				<meta
 					name="description"
-					content="Страница авторизации Piybeep Manager"
+					content="Страница авторизации piybeep manager"
 				/>
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
-			<header className="sign__header">
+			<header
+				className="sign__header"
+				style={{
+					cursor: "default",
+				}}
+			>
 				<Image alt="" src={Logo} />
-				Piybeep. Сервер-менеджер.
+				piybeep. Панель управления.
 			</header>
 			<main className="sign__page">
 				<Form />
@@ -28,4 +33,5 @@ export default function SignPage() {
 		</>
 	);
 }
+
 

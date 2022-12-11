@@ -1,9 +1,9 @@
-import Button from "../Button";
 import s from "./SortPopup.module.scss";
 
 import Sort from "../../../public/svg/Sort.svg";
 import React from "react";
 import classNames from "classnames";
+import { useRouter } from "next/router";
 
 type ListItem = {
 	text: string;
@@ -21,6 +21,7 @@ export interface SortPopupProps {
 
 export default function SortPopup(props: SortPopupProps) {
 	const ref = React.useRef<any>();
+	const router = useRouter();
 
 	React.useEffect(() => {
 		const handleClickOutside = (event: any) => {
@@ -36,11 +37,26 @@ export default function SortPopup(props: SortPopupProps) {
 
 	const selectItem = (text: string) => {
 		const newList = props.list?.map((i) => {
-			if (i.text == text) return { ...i, active: !i.active };
-			else return { ...i };
+			if (i.text == text) {
+				return { ...i, active: !i.active };
+			} else return { ...i };
 		});
 
 		props.updateList(newList);
+		if (!router.query.hasOwnProperty("statusFilter")) {
+			router.push("/projects", {
+				query: {
+					statusFilter: ["В планах", "В разработке", "Завершено"],
+				},
+			});
+		} else {
+			router.push("", {
+				query: {
+					statusFilter: null,
+				},
+			});
+		}
+		console.log(router.query.statusFilter);
 	};
 
 	return (

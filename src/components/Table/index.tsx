@@ -59,8 +59,6 @@ export default function Table(props: TableProps) {
 		{ text: "Завершено", color: COLORS["Завершено"] },
 	]);
 
-	console.log(props);
-
 	return (
 		<div className={s.table_wrapper}>
 			<SortPopup

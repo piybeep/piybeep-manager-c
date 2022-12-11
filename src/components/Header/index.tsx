@@ -24,7 +24,7 @@ export default function Header(props: HeaderProps) {
 			<span className={s.left}>
 				<div className={s.logo}>
 					<Image alt="" src={Logo} />
-					Piybeep. Сервер-менеджер.
+					piybeep. Панель управления.
 				</div>
 				{props.items?.length ? (
 					<div className={s.nav}>
@@ -49,4 +49,5 @@ export default function Header(props: HeaderProps) {
 		</header>
 	);
 }
+
 

@@ -14,16 +14,17 @@ import client from "../../src/api/apollo-client";
 import { gql } from "@apollo/client";
 
 export default function ProjectItem(props: any) {
-	const projectName = props?.project?.name ?? undefined;
+	const { project } = props?.servers[0];
+	const projectName = project?.name ?? undefined;
 
 	const [navItems, setNavItems] = React.useState<HeaderProps["items"]>([
 		{ link: "/projects", title: "Проекты" },
 	]);
 
-	if (navItems?.length == 1 && props?.project?.id) {
+	if (navItems?.length == 1 && project?.id) {
 		setNavItems((i) => {
-			i!.push({
-				link: "/projects/" + props?.project?.id,
+			i?.push({
+				link: "/projects/" + project?.id,
 				title: projectName,
 			});
 			return i;
@@ -36,7 +37,7 @@ export default function ProjectItem(props: any) {
 		const _rows = props?.servers?.map((sr: any) => {
 			return {
 				server: { id: sr.id },
-				project: { id: sr.projectId },
+				project: { id: sr.project.id },
 				cells: [
 					{ text: sr.name },
 					{ text: sr.ip, copy: true },
@@ -56,10 +57,13 @@ export default function ProjectItem(props: any) {
 	const [headerOptions, setHeaderOptions] = React.useState<HeaderProps>({
 		items: navItems,
 	});
+
 	return (
 		<>
 			<Head>
-				<title>{projectName ? projectName + " - " : ""}Piybeep Manager</title>
+				<title>
+					{projectName ? projectName + " - piybeep manager" : "piybeep manager"}
+				</title>
 				<meta name="description" content={"Страница проекта " + projectName} />
 				<link rel="icon" href={"/favicon.ico"} />
 			</Head>
@@ -85,22 +89,19 @@ export default function ProjectItem(props: any) {
 }
 
 export async function getServerSideProps(context: any) {
-	console.log(context.params.id);
-
 	try {
 		const { data, loading } = await client.query({
 			query: gql`
 				query {
-					servers {
+					servers(projectId: ${context.params.id}) {
 						id
 						name
 						ip
 						updatedAt
-						projectId
-					}
-					project(id: ${context.params.id}) {
-						id
-						name
+						project {
+							id
+							name
+						}
 					}
 				}
 			`,
@@ -116,7 +117,6 @@ export async function getServerSideProps(context: any) {
 		return {
 			props: {
 				servers: data.servers,
-				project: data.project,
 				loading,
 				error: null,
 			},
@@ -130,4 +130,6 @@ export async function getServerSideProps(context: any) {
 		};
 	}
 }
+
+
 

@@ -53,10 +53,10 @@ export default function Projects(props: any) {
 	return (
 		<>
 			<Head>
-				<title>Проекты - Piybeep Manager</title>
+				<title>Проекты - piybeep manager</title>
 				<meta
 					name="description"
-					content="Страница с проектами Piybeep Manager"
+					content="Страница с проектами piybeep manager"
 				/>
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
@@ -103,4 +103,6 @@ export async function getStaticProps() {
 		};
 	}
 }
+
+
 

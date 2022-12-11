@@ -7,7 +7,7 @@ export default function NotFound() {
 	return (
 		<>
 			<Head>
-				<title>Страница не найдена - Piybeep Manager</title>
+				<title>Страница не найдена - piybeep manager</title>
 			</Head>
 			<Header />
 			<main>
