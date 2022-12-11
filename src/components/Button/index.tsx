@@ -14,7 +14,7 @@ export interface ButtonProps
 	icon?: any;
 }
 
-export default function Button(props: ButtonProps) {
+export default function Button({ icon = null, value, ...props }: ButtonProps) {
 	return (
 		<button
 			{...props}
@@ -23,8 +23,8 @@ export default function Button(props: ButtonProps) {
 				[s.disabled]: props.disabled,
 			})}
 		>
-			{props.value}
-			{props.icon ? <Image alt="" src={props.icon} /> : ""}
+			{value}
+			{icon ? <Image alt="" src={icon} /> : ""}
 		</button>
 	);
 }

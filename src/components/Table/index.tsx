@@ -59,6 +59,8 @@ export default function Table(props: TableProps) {
 		{ text: "Завершено", color: COLORS["Завершено"] },
 	]);
 
+	console.log(props);
+
 	return (
 		<div className={s.table_wrapper}>
 			<SortPopup
@@ -71,7 +73,7 @@ export default function Table(props: TableProps) {
 			<table>
 				<thead>
 					<tr>
-						{props.titles.map((t) => (
+						{props.titles?.map((t) => (
 							<th key={t.text}>
 								<span
 									className={t.sort ? (t.sort === "down" ? s.down : s.up) : ""}
@@ -93,7 +95,7 @@ export default function Table(props: TableProps) {
 					</tr>
 				</thead>
 				<tbody>
-					{props.rows.map((row, index) => (
+					{props.rows?.map((row, index) => (
 						<tr
 							key={index}
 							onClick={(e: any) => {
@@ -101,7 +103,7 @@ export default function Table(props: TableProps) {
 									Router.push("/projects/" + row.project?.id);
 							}}
 						>
-							{row.cells.map((cell) => (
+							{row.cells?.map((cell) => (
 								<Row key={cell.text} cell={cell} />
 							))}
 						</tr>

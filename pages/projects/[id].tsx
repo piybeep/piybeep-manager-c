@@ -36,6 +36,7 @@ export default function ProjectItem(props: any) {
 		const _rows = props?.servers?.map((sr: any) => {
 			return {
 				server: { id: sr.id },
+				project: { id: sr.projectId },
 				cells: [
 					{ text: sr.name },
 					{ text: sr.ip, copy: true },
@@ -95,6 +96,7 @@ export async function getServerSideProps(context: any) {
 						name
 						ip
 						updatedAt
+						projectId
 					}
 					project(id: ${context.params.id}) {
 						id
