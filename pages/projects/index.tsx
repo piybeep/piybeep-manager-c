@@ -63,19 +63,32 @@ export default function Projects(props: any) {
 			<Preloader show={loading} />
 			<Header {...headerOptions} />
 			<main className="home_page">
-				<Table titles={DATA.titles} rows={rows} />
+				<Table
+					titles={DATA.titles}
+					rows={rows}
+					// add={() => alert("add")}
+				/>
 			</main>
 			<Footer />
 		</>
 	);
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps(context: any) {
 	try {
+		let { statusFilter } = context.query;
+		if (typeof statusFilter == "string") {
+			statusFilter = [statusFilter];
+		}
+
 		const { data, loading } = await client.query({
 			query: gql`
 				query {
-					projects {
+					projects(${
+						statusFilter?.length
+							? `statusFilter: [${statusFilter.map((i: any) => `"${i}"`)}],`
+							: ""
+					}, statusSort: true) {
 						id
 						name
 						link
@@ -103,6 +116,4 @@ export async function getStaticProps() {
 		};
 	}
 }
-
-
 

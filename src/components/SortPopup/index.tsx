@@ -35,28 +35,56 @@ export default function SortPopup(props: SortPopupProps) {
 		};
 	}, [props.close]);
 
-	const selectItem = (text: string) => {
-		const newList = props.list?.map((i) => {
-			if (i.text == text) {
-				return { ...i, active: !i.active };
-			} else return { ...i };
-		});
-
-		props.updateList(newList);
-		if (!router.query.hasOwnProperty("statusFilter")) {
-			router.push("/projects", {
+	const selectItem = async (text: string) => {
+		const query = { ...router.query };
+		if (!query.hasOwnProperty("statusFilter")) {
+			await router.push({
+				pathname: router.pathname,
 				query: {
-					statusFilter: ["В планах", "В разработке", "Завершено"],
+					statusFilter: [text],
 				},
 			});
 		} else {
-			router.push("", {
-				query: {
-					statusFilter: null,
-				},
-			});
+			const index = query?.statusFilter?.indexOf(text) as number;
+
+			if (index > -1) {
+				if (typeof query?.statusFilter == "object") {
+					query?.statusFilter?.splice(index, 1);
+
+					await router.replace({
+						pathname: router.pathname,
+						query: query,
+					});
+				} else {
+					await router.replace({
+						pathname: router.pathname,
+						query: {},
+					});
+				}
+			} else {
+				if (typeof query?.statusFilter == "object") {
+					query.statusFilter?.push(text);
+				} else if (typeof query?.statusFilter == "string") {
+					query.statusFilter = [query.statusFilter, text];
+				}
+
+				await router.replace({
+					pathname: router.pathname,
+					query: query,
+				});
+			}
 		}
-		console.log(router.query.statusFilter);
+	};
+
+	const searchActive = (text: string) => {
+		if (router.query.hasOwnProperty("statusFilter")) {
+			if (typeof router.query?.statusFilter == "object") {
+				return router.query.statusFilter.includes(text);
+			} else if (typeof router.query?.statusFilter == "string") {
+				return router.query.statusFilter == text;
+			}
+		}
+		return false;
 	};
 
 	return (
@@ -79,7 +107,10 @@ export default function SortPopup(props: SortPopupProps) {
 									style={{ color: i.color }}
 									onClick={() => selectItem(i.text)}
 								>
-									<span className={i.active ? s.active : ""}>•</span> {i.text}
+									<span className={searchActive(i.text) ? s.active : ""}>
+										•
+									</span>{" "}
+									{i.text}
 								</li>
 							);
 					  })

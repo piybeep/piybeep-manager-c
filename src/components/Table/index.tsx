@@ -4,6 +4,8 @@ import SortPopup from "../SortPopup";
 import React from "react";
 import Router from "next/router";
 import Row from "./Row";
+import Image from "next/image";
+import Plus from '../../../public/svg/Plus.svg';
 
 type TitleType = {
 	text: string;
@@ -24,6 +26,7 @@ export interface TableProps {
 		project: Record<string, any>;
 		cells: RowType[];
 	}[];
+	add?: () => void;
 }
 
 export const COLORS: Record<string, string> = {
@@ -106,9 +109,22 @@ export default function Table(props: TableProps) {
 							))}
 						</tr>
 					))}
+					{props.add ? (
+						<tr onClick={props.add} className={s.row__add}>
+							<td>
+								Добавить <Image alt="" src={Plus} />
+							</td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+					) : (
+						""
+					)}
 				</tbody>
 			</table>
 		</div>
 	);
 }
+
 

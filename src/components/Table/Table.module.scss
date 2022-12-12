@@ -48,7 +48,18 @@
 				transition: all 0.2s;
 				border-bottom: 1px solid #3f3c49;
 
+				&.row__add {
+					td {
+						font-weight: 400;
+						font-size: 16px;
+						line-height: 19px;
+
+						color: #8e8e8e;
+					}
+				}
+
 				td {
+					width: 25%;
 					color: #ececec;
 					padding: 20px 6px;
 					a {
