@@ -1,5 +1,6 @@
-import Head from "next/head";
 import React from "react";
+import Head from "next/head";
+import { gql } from "@apollo/client";
 
 import Footer from "../../src/components/Footer";
 import Header, { HeaderProps } from "../../src/components/Header";
@@ -11,10 +12,13 @@ import Update from "../../public/svg/Update.svg";
 import Status from "../../public/svg/Status.svg";
 import Upload from "../../public/svg/Upload.svg";
 import client from "../../src/api/apollo-client";
-import { gql } from "@apollo/client";
+import Link from "next/link";
+import Router from "next/router";
 
 export default function ProjectItem(props: any) {
-	const { project } = props?.servers[0];
+	const { project } = props?.servers.length
+		? props?.servers[0]
+		: { project: [] };
 	const projectName = project?.name ?? undefined;
 
 	const [navItems, setNavItems] = React.useState<HeaderProps["items"]>([
@@ -69,7 +73,7 @@ export default function ProjectItem(props: any) {
 			</Head>
 			<Header {...headerOptions} />
 			<main className="home_page">
-				{props.servers?.length ? (
+				{!props.error ? (
 					<Table
 						titles={[
 							{ text: "Название сервера", icon: Alphabet },
@@ -80,7 +84,20 @@ export default function ProjectItem(props: any) {
 						rows={rows}
 					/>
 				) : (
-					<p>Не найдено</p>
+					<div className="not_found__servers">
+						<h2>Ошибка</h2>
+						<samp>
+							{typeof JSON.parse(props.error) !== "object"
+								? "Неизвестная ошибка"
+								: JSON.parse(props.error).message}
+						</samp>
+						<span>
+							<span className="link" onClick={() => Router.back()}>
+								Вернуться назад
+							</span>{" "}
+							или <Link href={"/"}>перейти на главную</Link>
+						</span>
+					</div>
 				)}
 			</main>
 			<Footer />
@@ -90,10 +107,21 @@ export default function ProjectItem(props: any) {
 
 export async function getServerSideProps(context: any) {
 	try {
+		const id = Number(context.params.id);
+
+		if (!id) {
+			return {
+				props: {
+					servers: [],
+					error: JSON.stringify({ message: "ID должен быть числом" }),
+				},
+			};
+		}
+
 		const { data, loading } = await client.query({
 			query: gql`
 				query {
-					servers(projectId: ${context.params.id}) {
+					servers(projectId: ${id}) {
 						id
 						name
 						ip
@@ -108,9 +136,12 @@ export async function getServerSideProps(context: any) {
 			errorPolicy: "ignore",
 		});
 
-		if (!data) {
+		if (!data?.servers?.length) {
 			return {
-				notFound: true,
+				props: {
+					servers: [],
+					error: JSON.stringify({ message: "Сервера не найдены" }),
+				},
 			};
 		}
 
@@ -124,12 +155,10 @@ export async function getServerSideProps(context: any) {
 	} catch (error: any) {
 		return {
 			props: {
-				projects: [],
+				servers: [],
 				error: JSON.stringify(error),
 			},
 		};
 	}
 }
-
-
 
