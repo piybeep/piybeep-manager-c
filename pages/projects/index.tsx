@@ -13,6 +13,8 @@ import Alphabet from "../../public/svg/Alphabet.svg";
 import Share from "../../public/svg/Share.svg";
 import Update from "../../public/svg/Update.svg";
 import Status from "../../public/svg/Status.svg";
+import Link from "next/link";
+import Router from 'next/router';
 
 export const DATA = {
 	titles: [
@@ -50,6 +52,9 @@ export default function Projects(props: any) {
 		props.error ? JSON.parse(props.error) : null,
 	);
 
+	console.log(props.error);
+	
+
 	return (
 		<>
 			<Head>
@@ -63,11 +68,28 @@ export default function Projects(props: any) {
 			<Preloader show={loading} />
 			<Header {...headerOptions} />
 			<main className="home_page">
-				<Table
-					titles={DATA.titles}
-					rows={rows}
-					// add={() => alert("add")}
-				/>
+				{props.error ? (
+					<Table
+						titles={DATA.titles}
+						rows={rows}
+						// add={() => alert("add")}
+					/>
+				) : (
+					<div className="not_found__servers">
+						<h2>Ошибка</h2>
+						<samp>
+							{typeof JSON.parse(props.error) !== "object"
+								? "Неизвестная ошибка"
+								: JSON.parse(props.error).message}
+						</samp>
+						<span>
+							<span className="link" onClick={() => Router.back()}>
+								Вернуться назад
+							</span>{" "}
+							или <Link href={"/"}>перейти на главную</Link>
+						</span>
+					</div>
+				)}
 			</main>
 			<Footer />
 		</>
@@ -97,7 +119,7 @@ export async function getServerSideProps(context: any) {
 					}
 				}
 			`,
-			errorPolicy: "ignore",
+			// errorPolicy: "ignore",
 		});
 
 		return {
@@ -116,4 +138,9 @@ export async function getServerSideProps(context: any) {
 		};
 	}
 }
+
+
+
+
+
 

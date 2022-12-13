@@ -4,7 +4,7 @@ import Image from "next/image";
 import Footer from "../../src/components/Footer";
 
 import Logo from "../../public/svg/Logo.svg";
-import Form from "../../src/components/Form";
+import AuthForm from "../../src/components/AuthForm";
 
 export default function SignPage() {
 	return (
@@ -27,11 +27,10 @@ export default function SignPage() {
 				piybeep. Панель управления.
 			</header>
 			<main className="sign__page">
-				<Form />
+				<AuthForm />
 			</main>
 			<Footer center />
 		</>
 	);
 }
-
 

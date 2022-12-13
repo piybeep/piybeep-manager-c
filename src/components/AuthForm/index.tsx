@@ -1,6 +1,6 @@
 import React from "react";
 
-import s from "./Form.module.scss";
+import s from "./AuthForm.module.scss";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { useRouter } from "next/router";
@@ -8,8 +8,10 @@ import classNames from "classnames";
 
 import OpenEye from "../../../public/svg/OpenEye.svg";
 import Image from "next/image";
+import { gql, useQuery as runQuery } from "@apollo/client";
+import client from "../../api/apollo-client";
 
-export default function Form() {
+export default function AuthForm() {
 	const [showPass, setShowPass] = React.useState(false);
 	const [formError, setFormError] = React.useState<string>();
 	const router = useRouter();
@@ -19,14 +21,44 @@ export default function Form() {
 			login: "",
 			password: "",
 		},
-		onSubmit: (v) => {
-			console.log(v);
+		onSubmit: async (v) => {
+			const QUERY_LOGIN = gql`
+				mutation {
+					login(loginAccountInput: { password: "${v.password}", username: "${v.login}" }) {
+						access_token
+						account {
+							id
+							username
+							email
+							role {
+								id
+								level
+								name
+							}
+						}
+					}
+				}
+			`;
 
-			if (v.login == "admin" && v.password == "minad") {
-				router.push("/");
-			} else {
-				setFormError("Неверный логин или пароль");
+			const { data, errors } = await client.mutate({
+				errorPolicy: "all",
+				mutation: QUERY_LOGIN,
+			});
+
+			if (errors?.length) {
+				const messages = errors.map((e) => e.message);
+				setFormError(messages.join(", "));
+			} else setFormError(undefined);
+
+			if (data) {
+				// console.log(data.login.access_token);
+
+				localStorage.setItem("token", data.login.access_token);
+
+				// router.push("/");
 			}
+
+			// console.log(data, errors);
 		},
 		validateOnChange: false,
 		validateOnBlur: false,
