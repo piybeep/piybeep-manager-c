@@ -24,7 +24,7 @@ export default function AuthForm() {
 		onSubmit: async (v) => {
 			const QUERY_LOGIN = gql`
 				mutation {
-					login(loginAccountInput: { password: "${v.password}", username: "${v.login}" }) {
+					login(LoginInput: { password: "${v.password}", username: "${v.login}" }) {
 						access_token
 						account {
 							id
@@ -149,4 +149,5 @@ export default function AuthForm() {
 		</form>
 	);
 }
+
 

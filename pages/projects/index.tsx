@@ -1,8 +1,9 @@
 import React from "react";
-import { ApolloError, gql } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import Head from "next/head";
-
-import client from "../../src/api/apollo-client";
+import Link from "next/link";
+import Router from "next/router";
+import { useRouter } from "next/router";
 
 import Preloader from "../../src/components/Preloader";
 import Header, { HeaderProps } from "../../src/components/Header";
@@ -13,8 +14,7 @@ import Alphabet from "../../public/svg/Alphabet.svg";
 import Share from "../../public/svg/Share.svg";
 import Update from "../../public/svg/Update.svg";
 import Status from "../../public/svg/Status.svg";
-import Link from "next/link";
-import Router from 'next/router';
+import client from "../../src/api/apollo-client";
 
 export const DATA = {
 	titles: [
@@ -25,15 +25,98 @@ export const DATA = {
 	],
 };
 
+const PROJECTS_QUERY = (statusFilter: any) => gql`
+				query {
+					projects(${
+						statusFilter?.length
+							? `statusFilter: [${statusFilter.map((i: any) => `"${i}"`)}],`
+							: ""
+					}, statusSort: true) {
+						id
+						name
+						link
+						updatedAt
+						status
+					}
+				}
+			`;
+
 export default function Projects(props: any) {
 	const [headerOptions, setHeaderOptions] = React.useState<HeaderProps>({
 		items: [{ link: "/projects", title: "Проекты" }],
 	});
 
 	const [rows, setRows] = React.useState([]);
+	const [serverData, setServerData] = React.useState<
+		Record<any, any> | Record<any, any>[] | null
+	>();
+	const [globalError, setGlobalError] = React.useState<Record<
+		any,
+		any
+	> | null>();
+	const [loading, setLoading] = React.useState<boolean>(false);
+	const [token, setToken] = React.useState<string | null>();
+	// const [session, setSession] = React.useState();
+	const router = useRouter();
+
+	let { statusFilter } = router.query;
+	if (typeof statusFilter == "string") {
+		statusFilter = [statusFilter];
+	}
+
+	const [mutateFunction, { loading: s_loading, error: s_error }] =
+		useMutation(gql`
+			mutation {
+				refresh {
+					access_token
+				}
+			}
+		`);
+
+	if (!globalError && !token) {
+		mutateFunction().then((res) => {
+			setToken(res.data.refresh?.access_token);
+		});
+	}
+
+	const {
+		data: project_data,
+		loading: p_loading,
+		error: projects_error,
+		refetch,
+	} = useQuery(PROJECTS_QUERY(statusFilter), {
+		context: {
+			headers: {
+				"authorization": token ? `Bearer ${token}` : "",
+			},
+		},
+		errorPolicy: "ignore",
+	});
+
+	React.useLayoutEffect(() => {
+		if (token) {
+			refetch();
+		}
+	}, [token, refetch]);
+
+	React.useLayoutEffect(() => {
+		if (project_data) {
+			setServerData(project_data);
+		}
+	}, [project_data]);
+
+	React.useLayoutEffect(() => {
+		setLoading(s_loading || p_loading);
+	}, [s_loading, p_loading]);
+
+	React.useLayoutEffect(() => {
+		if (projects_error) {
+			setGlobalError(projects_error);
+		}
+	}, [projects_error]);
 
 	React.useEffect(() => {
-		const _rows = props?.projects.map((pr: any) => {
+		const _rows = serverData?.projects.map((pr: any) => {
 			return {
 				project: { id: pr.id },
 				cells: [
@@ -44,16 +127,9 @@ export default function Projects(props: any) {
 				],
 			};
 		});
+
 		setRows(_rows);
-	}, [props.projects]);
-
-	const [loading, setLoading] = React.useState(props?.loading);
-	const [error, setError] = React.useState(
-		props.error ? JSON.parse(props.error) : null,
-	);
-
-	console.log(props.error);
-	
+	}, [serverData]);
 
 	return (
 		<>
@@ -68,7 +144,7 @@ export default function Projects(props: any) {
 			<Preloader show={loading} />
 			<Header {...headerOptions} />
 			<main className="home_page">
-				{props.error ? (
+				{!globalError ? (
 					<Table
 						titles={DATA.titles}
 						rows={rows}
@@ -77,11 +153,7 @@ export default function Projects(props: any) {
 				) : (
 					<div className="not_found__servers">
 						<h2>Ошибка</h2>
-						<samp>
-							{typeof JSON.parse(props.error) !== "object"
-								? "Неизвестная ошибка"
-								: JSON.parse(props.error).message}
-						</samp>
+						{globalError && <samp>{globalError?.message}</samp>}
 						<span>
 							<span className="link" onClick={() => Router.back()}>
 								Вернуться назад
@@ -96,51 +168,24 @@ export default function Projects(props: any) {
 	);
 }
 
-export async function getServerSideProps(context: any) {
-	try {
-		let { statusFilter } = context.query;
-		if (typeof statusFilter == "string") {
-			statusFilter = [statusFilter];
-		}
+// export async function getServerSideProps(context: any) {
+// 	try {
+// 		let { statusFilter } = context.query;
+// 		if (typeof statusFilter == "string") {
+// 			statusFilter = [statusFilter];
+// 		}
 
-		const { data, loading } = await client.query({
-			query: gql`
-				query {
-					projects(${
-						statusFilter?.length
-							? `statusFilter: [${statusFilter.map((i: any) => `"${i}"`)}],`
-							: ""
-					}, statusSort: true) {
-						id
-						name
-						link
-						updatedAt
-						status
-					}
-				}
-			`,
-			// errorPolicy: "ignore",
-		});
-
-		return {
-			props: {
-				projects: data.projects,
-				loading,
-				error: null,
-			},
-		};
-	} catch (error: any) {
-		return {
-			props: {
-				projects: [],
-				error: JSON.stringify(error),
-			},
-		};
-	}
-}
-
-
-
-
-
+// 		return {
+// 			props: {
+// 				statusFilter,
+// 			},
+// 		};
+// 	} catch (error: any) {
+// 		return {
+// 			props: {
+// 				error: JSON.stringify(error),
+// 			},
+// 		};
+// 	}
+// }
 
